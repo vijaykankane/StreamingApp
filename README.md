@@ -136,3 +136,19 @@ Automated tests are not yet included. Recommended smoke checks:
 ## License
 
 MIT © StreamFlix Team
+
+
+
+
+Steps to execute the assignment 
+1. Create ECR reposiroty by AWS console or from AWS CLI
+
+975050024946.dkr.ecr.ca-central-1.amazonaws.com/vijaystreamingapp/frontend
+975050024946.dkr.ecr.ca-central-1.amazonaws.com/vijaystreamingapp/chatservice
+975050024946.dkr.ecr.ca-central-1.amazonaws.com/vijaystreamingapp/stremingbackend
+975050024946.dkr.ecr.ca-central-1.amazonaws.com/vijaystreamingapp/authservice
+975050024946.dkr.ecr.ca-central-1.amazonaws.com/vijaystreamingapp/adminservice
+
+Now lets create the image and push the same to the ECR 
+we are creating the script to push the images to teh ECR
+then we will set the configmap to make it running by kubernets than by HELM then will configure the same in Jenkins file
