@@ -1,14 +1,26 @@
-FROM node:18-alpine AS base
+FROM node:18
+
+# Root app folder
+WORKDIR /app
+
+# Copy chatService package.json
+COPY chatService/package*.json ./chatService/
+
+# Install deps
+WORKDIR /app/chatService
+RUN npm install
+
+# Copy chatService files
+COPY chatService/. .
+
+# Copy common folder correctly (THIS FIXES THE ISSUE)
+WORKDIR /app
+COPY common ./common
+ENV NODE_ENV=production
+EXPOSE 3002
 
 WORKDIR /app/chatService
 
-COPY chatService/package*.json ./
-RUN npm install --production
-
-COPY chatService/. ./
-COPY common ../common
-
-ENV NODE_ENV=production
-EXPOSE 3004
-
 CMD ["npm", "run", "start"]
+
+

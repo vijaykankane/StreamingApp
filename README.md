@@ -137,18 +137,201 @@ Automated tests are not yet included. Recommended smoke checks:
 
 MIT © StreamFlix Team
 
-
-
-
 Steps to execute the assignment 
-1. Create ECR reposiroty by AWS console or from AWS CLI
 
-975050024946.dkr.ecr.ca-central-1.amazonaws.com/vijaystreamingapp/frontend
-975050024946.dkr.ecr.ca-central-1.amazonaws.com/vijaystreamingapp/chatservice
-975050024946.dkr.ecr.ca-central-1.amazonaws.com/vijaystreamingapp/stremingbackend
-975050024946.dkr.ecr.ca-central-1.amazonaws.com/vijaystreamingapp/authservice
-975050024946.dkr.ecr.ca-central-1.amazonaws.com/vijaystreamingapp/adminservice
 
 Now lets create the image and push the same to the ECR 
 we are creating the script to push the images to teh ECR
 then we will set the configmap to make it running by kubernets than by HELM then will configure the same in Jenkins file
+
+
+
+
+This project demonstrates end-to-end containerization, CI/CD, cloud orchestration, deployment scaling, and monitoring of a MERN-based Streaming Application using Docker, Amazon ECR, Jenkins, EKS, Helm, and CloudWatch.
+
+Main Repository: UnpredictablePrashant/StreamingApp
+
+Table of Contents
+
+Project Overview
+
+Architecture Diagram
+
+Prerequisites
+Step 1 — Clone Repository
+
+Step 2 — Containerize the Application
+
+Step 3 — AWS Environment Setup
+
+Step 4 — Continuous Integration (jenkins)
+
+Step 5 — Kubernetes Deployment (EKS)
+
+Step 6 — Monitoring & Logging
+
+Step 7 — Documentation
+
+Step 8 — Final Validation
+
+Folder Structure
+
+License
+
+📦 Project Overview
+
+This assignment covers the entire lifecycle of a cloud-native MERN application:
+
+Containerization of frontend and backend
+
+Automated builds & deployments using Jenkins
+
+Image registry management with AWS ECR
+
+Kubernetes orchestration using Amazon EKS and Helm charts
+
+Monitoring & alerting using AWS CloudWatch
+
+ChatOps integrations using SNS + Slack/Teams/Telegram
+
+Architecture Diagram
+
+GitHub Repo → Jenkins (CI) → Amazon ECR → EKS Cluster (Helm Deployments)
+                                                                                                
+                                         Jenkins -> SNS → Lambda -> Slack (with the help of Lambda)
+
+Prerequisites
+
+Ensure the following tools/services are available:
+
+Local Tools
+
+Docker
+
+AWS CLI
+
+Kubectl
+
+eksctl
+
+Helm
+
+Git
+
+Cloud Services
+
+AWS ECR
+
+AWS IAM
+
+Amazon EC2 (for Jenkins)
+
+Amazon EKS
+
+CloudWatch
+
+Step 1 — Clone Repository
+git clone https://github.com/UnpredictablePrashant/StreamingApp.git cd StreamingApp
+
+Step 2 — Containerize the Application
+2.1 Create Dockerfiles
+
+Frontend Dockerfile
+FROM node:18-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+RUN npm run build
+EXPOSE 3000
+CMD ["npm", "start"]
+
+Backend Dockerfile
+FROM node:18-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+EXPOSE 5000
+CMD ["npm", "start"]
+
+2.2 Build Docker images of all the 5 Microservice and push to ECR with the help of scripts
+
+./scripts/build-and-push.sh  <account-id>.dkr.ecr.<region>.amazonaws.com/vijaystreamingapp/ v1.0 
+
+2.3 Create ECR Repositories
+
+aws ecr create-repository --repository-name  <account-id>.dkr.ecr.<region>.amazonaws.com/vijaystreamingapp/frontend
+aws ecr create-repository --repository-name  <account-id>.dkr.ecr.<region>.amazonaws.com/vijaystreamingapp/chatservice
+aws ecr create-repository --repository-name  <account-id>.dkr.ecr.<region>.amazonaws.com/vijaystreamingapp/stremingbackend
+aws ecr create-repository --repository-name  <account-id>.dkr.ecr.<region>.amazonaws.com/vijaystreamingapp/authservice
+aws ecr create-repository --repository-name  <account-id>.dkr.ecr.<region>.amazonaws.com/vijaystreamingapp/adminservice
+
+2.4 Authenticate Docker to ECR
+
+aws ecr get-login-password \
+
+| docker login --username AWS --password-stdin <AWS_ACCOUNT_ID>.dkr.ecr..amazonaws.com
+
+2.5 Push images to ECR
+image push will be taken care by ./scripts/build-and-push.sh
+
+Step 3 — AWS Environment Setup
+
+ We are using the herovired jenkins and configure the AWS credectial so our cluster can be accesss through the Jenkins nodes.
+
+Step 4 — Continuous Integration (CI) using Jenkins
+
+webhook is configured so any commit in the repo will call the CI pipeline followed by the CD pipeline automatically if all the stages succesfully executed.
+
+Step 5 — Kubernetes Deployment (EKS)
+
+With the help of clickops we create EKS cluster with verion 1.34.
+
+5.2 Deploy using Helm
+
+Helm directory contiains all the helm charts used for this application and it will be called by the CD pipelines and credentials are configured to connect to the correct cluster so it will deploy it correctly. these helm charts calling are the part of the CD pipeline which will be called from the CI if all teh stages passed.
+
+Step 7 — Documentation
+
+Include:
+
+Architecture diagrams
+
+CI/CD pipeline flowchart
+
+Helm chart structure
+
+EKS cluster configuration
+
+Jenkins job configurations
+
+Upload all documentation to /docs in the repository.
+
+✔️ Step 8 — Final Validation
+
+Verify the following:
+
+✔ Frontend is publicly accessible ✔ Backend API endpoints are responding ✔ Pods auto-scale under load ✔ Jenkins pipeline triggers on commits ✔ ECR images are updated ✔ Logs and metrics visible in CloudWatch
+
+Bonus Step 9 — ChatOps Integration 9.1 Create SNS Topics
+
+
+
+9.2 Integrate SNS with Slack 
+
+
+Use:
+
+
+Jenkins called SNS API + SNS → Lambda → Slack
+
+Send notifications for:
+
+Deployment success
+
+![alt text](images/SlackNotification.png)
+
+Build failure
+
+Scaling events
