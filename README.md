@@ -133,19 +133,8 @@ Automated tests are not yet included. Recommended smoke checks:
 2. Upload a small video + thumbnail via the admin dashboard (requires valid S3 credentials).
 3. Confirm playback from the browse page and verify that chat messages broadcast between multiple browser tabs.
 
-## License
 
-MIT © StreamFlix Team
-
-Steps to execute the assignment 
-
-
-Now lets create the image and push the same to the ECR 
-we are creating the script to push the images to teh ECR
-then we will set the configmap to make it running by kubernets than by HELM then will configure the same in Jenkins file
-
-
-
+                                 Steps to execute the assignment 
 
 This project demonstrates end-to-end containerization, CI/CD, cloud orchestration, deployment scaling, and monitoring of a MERN-based Streaming Application using Docker, Amazon ECR, Jenkins, EKS, Helm, and CloudWatch.
 
@@ -234,26 +223,7 @@ Step 1 — Clone Repository
 git clone https://github.com/UnpredictablePrashant/StreamingApp.git cd StreamingApp
 
 Step 2 — Containerize the Application
-2.1 Create Dockerfiles
-
-Frontend Dockerfile
-FROM node:18-alpine
-WORKDIR /app
-COPY package*.json ./
-RUN npm install
-COPY . .
-RUN npm run build
-EXPOSE 3000
-CMD ["npm", "start"]
-
-Backend Dockerfile
-FROM node:18-alpine
-WORKDIR /app
-COPY package*.json ./
-RUN npm install
-COPY . .
-EXPOSE 5000
-CMD ["npm", "start"]
+Docker files are present in all teh 5 microservices
 
 2.2 Build Docker images of all the 5 Microservice and push to ECR with the help of scripts
 
@@ -274,7 +244,8 @@ aws ecr get-login-password \
 | docker login --username AWS --password-stdin <AWS_ACCOUNT_ID>.dkr.ecr..amazonaws.com
 
 2.5 Push images to ECR
-image push will be taken care by ./scripts/build-and-push.sh
+
+Image push will be taken care by ./scripts/build-and-push.sh
 
 Step 3 — AWS Environment Setup
 
@@ -306,25 +277,40 @@ EKS cluster configuration
 
 Jenkins job configurations
 
-Upload all documentation to /docs in the repository.
 
 ✔️ Step 8 — Final Validation
 
 Verify the following:
 
-✔ Frontend is publicly accessible ✔ Backend API endpoints are responding ✔ Pods auto-scale under load ✔ Jenkins pipeline triggers on commits ✔ ECR images are updated ✔ Logs and metrics visible in CloudWatch
+✔ Frontend is publicly accessible 
+
+✔ Backend API endpoints are responding 
+
+✔ Pods auto-scale under load 
+![alt text](images/HpaConfigured.png)
+
+
+✔ Jenkins pipeline triggers on commits 
+![alt text](images/Webhook.png)
+
+✔ ECR images are updated 
+![alt text](images/repoImages.png)
 
 Bonus Step 9 — ChatOps Integration 9.1 Create SNS Topics
 
-
-
 9.2 Integrate SNS with Slack 
-
 
 Use:
 
-
 Jenkins called SNS API + SNS → Lambda → Slack
+aws sns publish --topic-arn arn:aws:sns:<region>:<accountID>:deployment-succes --message '{"status":"Success","environment":"Production","build":"127","timestamp":"2025-11-12 14:30:45","app":"StreamingApp","component":"Backend"}' --region eu-central-1
+
+![alt text](images/SNS-Created.png)
+
+![alt text](images/SNStoLamda.png)
+
+![alt text](images/SNStoslack.png)
+
 
 Send notifications for:
 
@@ -332,6 +318,6 @@ Deployment success
 
 ![alt text](images/SlackNotification.png)
 
-Build failure
+## License
 
-Scaling events
+MIT © StreamFlix Team
