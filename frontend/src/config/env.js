@@ -3,7 +3,7 @@ const getEnv = (key, fallback) => {
   return value === undefined || value === '' ? fallback : value;
 };
 
-export const AUTH_API_URL = getEnv('REACT_APP_AUTH_API_URL', 'http://localhost:3001/api');
+export const AUTH_API_URL = getEnv('REACT_APP_AUTH_API_URL', 'http://3.75.202.82:30010/api');
 export const STREAMING_API_URL = getEnv('REACT_APP_STREAMING_API_URL', 'http://localhost:3002/api');
 export const STREAMING_PUBLIC_URL = getEnv('REACT_APP_STREAMING_PUBLIC_URL', 'http://localhost:3002');
 export const ADMIN_API_URL = getEnv('REACT_APP_ADMIN_API_URL', 'http://localhost:3003/api');
