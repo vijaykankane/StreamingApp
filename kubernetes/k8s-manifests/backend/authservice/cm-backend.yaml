@@ -1,7 +1,12 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: backend-config
-  namespace: vijay
+  name: auth-config
+  namespace: vijay-streaming
 data:
   APP_ENV: "k8s-demo"
+  PORT: "3001"
+  JWT_SECRET: "changeme"
+  CLIENT_URLS: "http://localhost:3000"
+  AWS_REGION: "eu-central-1"
+  AWS_S3_BUCKET: "streamingapp-vijay"

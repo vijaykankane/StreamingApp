@@ -1,40 +1,40 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: backend
-  namespace: vijay
+  name: auth-streaming
+  namespace: vijay-streaming
   labels:
-    app: backend
+    app: backend-streaming
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: backend
+      app: backend-streaming
   template:
     metadata:
       labels:
-        app: backend
+        app: backend-streaming
     spec:
       containers:
-      - name: backend
-        image: 975050024946.dkr.ecr.eu-central-1.amazonaws.com/vijay-shopnow/backend:latest ##<account-id>.dkr.ecr.<region>.amazonaws.com/shopnow/backend:latest
+      - name: backend-streaming
+        image: 975050024946.dkr.ecr.ca-central-1.amazonaws.com/vijaystreamingapp/authservice:v1.5 #975050024946.dkr.ecr.eu-central-1.amazonaws.com/vijay-shopnow/backend:latest ##<account-id>.dkr.ecr.<region>.amazonaws.com/shopnow/backend:latest
         ports:
-        - containerPort: 5000
+        - containerPort: 3001
         envFrom:
         - configMapRef:
-            name: backend-config
+            name: auth-config
         - secretRef:
             name: backend-secret
         livenessProbe:
           httpGet:
-            path: /api/health
-            port: 5000
+            path: /health
+            port: 3001
           initialDelaySeconds: 15
           periodSeconds: 20
         readinessProbe:
           httpGet:
-            path: /api/health
-            port: 5000
+            path: /health
+            port: 3001
           initialDelaySeconds: 5
           periodSeconds: 10
         resources:

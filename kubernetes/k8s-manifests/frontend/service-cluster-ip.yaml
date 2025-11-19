@@ -1,14 +1,14 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: frontend
-  namespace: vijay
+  name: frontend-streaming
+  namespace: vijay-streaming
   labels:
-    app: frontend
+    app: frontend-streaming
 spec:
   type: ClusterIP
   selector:
-    app: frontend
+    app: frontend-streaming
   ports:
   - port: 80
     targetPort: 80
