@@ -39,6 +39,19 @@ build_and_push() {
   echo
 }
 
+build_and_push_backend() {
+  local dir=$1
+  local name=$2
+  local build_args=$3
+  echo "-> Building ${name} from ${dir}"
+  docker build ${DOCKER_OPTS} ${build_args} -f ${dir}/Dockerfile  -t "${REGISTRY}/${name}:${TAG}" "./backend"
+  echo "-> Pushing ${REGISTRY}/${name}:${TAG}"
+  docker push "${REGISTRY}/${name}:${TAG}"
+  echo
+}
+
+
+
 # Validate docker available
 if ! command -v docker >/dev/null 2>&1; then
   echo "ERROR: docker not found in PATH"
@@ -47,15 +60,15 @@ fi
 
 # Build components
 build_and_push "./frontend" "frontend" "--build-arg USER_NAME=${USER_NAME}"
-build_and_push "./backend/adminService" "adminservice" ""
-build_and_push "./backend/authService" "authservice" ""
-build_and_push "./backend/chatService" "chatservice" ""
-build_and_push "./backend/streamingService" "stremingbackend" ""
+build_and_push_backend "./backend/adminService" "adminservice" ""
+build_and_push  "./backend/authService" "authservice" ""
+build_and_push_backend "./backend/chatService" "chatservice" ""
+build_and_push_backend "./backend/streamingService" "stremingbackend" ""
 
 
 echo "All images built and pushed:"
 echo "  ${REGISTRY}/frontend:${TAG} (for user: ${USER_NAME})"
-echo "  ${REGISTRY}/adminService:${TAG}"
+echo "  ${REGISTRY}/adminservice:${TAG}"
 echo "  ${REGISTRY}/stremingbackend:${TAG}"
 echo "  ${REGISTRY}/chatservice:${TAG}"
 echo "  ${REGISTRY}/authservice:${TAG}"
