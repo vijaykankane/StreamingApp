@@ -201,8 +201,6 @@ AWS CLI
 
 Kubectl
 
-eksctl
-
 Helm
 
 Git
@@ -213,11 +211,8 @@ AWS ECR
 
 AWS IAM
 
-Amazon EC2 (for Jenkins)
-
 Amazon EKS
 
-CloudWatch
 
 Step 1 — Clone Repository
 git clone https://github.com/UnpredictablePrashant/StreamingApp.git cd StreamingApp
@@ -232,9 +227,13 @@ Docker files are present in all teh 5 microservices
 2.3 Create ECR Repositories
 
 aws ecr create-repository --repository-name  <account-id>.dkr.ecr.<region>.amazonaws.com/vijaystreamingapp/frontend
+
 aws ecr create-repository --repository-name  <account-id>.dkr.ecr.<region>.amazonaws.com/vijaystreamingapp/chatservice
+
 aws ecr create-repository --repository-name  <account-id>.dkr.ecr.<region>.amazonaws.com/vijaystreamingapp/stremingbackend
+
 aws ecr create-repository --repository-name  <account-id>.dkr.ecr.<region>.amazonaws.com/vijaystreamingapp/authservice
+
 aws ecr create-repository --repository-name  <account-id>.dkr.ecr.<region>.amazonaws.com/vijaystreamingapp/adminservice
 
 2.4 Authenticate Docker to ECR
@@ -282,9 +281,13 @@ Jenkins job configurations
 
 Verify the following:
 
-✔ Frontend is publicly accessible 
+✔ Frontend is publicly accessible over nodeport
 
-✔ Backend API endpoints are responding 
+![alt text](images/FrontendWorking.png)
+
+✔ Backend API endpoints are responding  health endpoint of auth service working fine.
+![alt text](images/backendWorking.png)
+
 
 ✔ Pods auto-scale under load 
 ![alt text](images/HpaConfigured.png)
